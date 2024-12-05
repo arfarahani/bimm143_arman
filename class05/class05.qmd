@@ -1,0 +1,205 @@
+---
+title: "Class 6: Data Vis with ggplot"
+author: "Arman Farahani A17497672"
+format: pdf
+---
+
+## Plotting in R
+
+R has lot's of ways to make plots and figures. This includes so-called **base** graphics and packages like **ggplot2**
+
+```{r}
+plot(cars)
+```
+
+
+This is a **base** R plot of the in-built 'cars' dataset that has only two columns:
+
+```{r}
+head(cars)
+```
+
+
+> Q. How would we plot this wee dataset with **ggplot2**?
+
+All ggplot figures have at least 3 layers:
+
+- **data**
+- **aes** (how the data map to the plot)
+- **geom** (how we draw the plot, lines, points, etc.)
+
+Before I use any new package I need to download and install it with the `install.packages()` command.
+
+I never use `install.package` without my quarto document otherwise I will install the package over and over and over again - which is silly!
+
+Once a package is installed I can load it up with the `library()` function. 
+
+```{r}
+# install.packages("ggplot2")
+library(ggplot2)
+ggplot(cars) +
+  aes(x=speed, y=dist) +
+  geom_point()
+```
+
+
+
+Key-point: For simple plots (like the one above) ggplot is more verbose (we need to do more typing) but as plots get more complicated ggplot starts to be more clear and simple than base R plot()
+
+```{r}
+ggplot(cars) +
+  aes(speed, dist) +
+  geom_point() +
+  geom_smooth(method = "lm", se=FALSE) +
+  labs(title = "Stopping distance of old cars", 
+       subtitle = "From the in-built cars dataset") +
+  theme_bw()
+```
+
+> Q1 For which phases is data visualization important in our scientific workflows?
+
+All of the above
+
+> Q2. True or False? The ggplot2 package comes already installed with R?
+
+FALSE
+
+> Q3. Which plot types are typically NOT used to compare distributions of numeric variables?
+
+Network graphs
+
+> Q4. Which statement about data visualization with ggplot2 is incorrect?
+
+ggplot2 is the only way to create plots in R
+
+> Q5. Which geometric layer should be used to create scatter plots in ggplot2?
+
+geom_point()
+
+
+```{r}
+url <- "https://bioboot.github.io/bimm143_S20/class-material/up_down_expression.txt"
+genes <- read.delim(url)
+head(genes)
+```
+
+>Q. Use the nrow() function to find out how many genes are in this dataset. What is your answer?
+
+>Q. Use the colnames() function and the ncol() function on the genes data frame to find out what the column names are (we will need these later) and how many columns there are. How many columns did you find?
+
+>Q. Use the table() function on the State column of this data.frame to find out how many ‘up’ regulated genes there are. What is your answer
+
+>Q. Using your values above and 2 significant figures. What fraction of total genes is up-regulated in this dataset?
+
+```{r}
+round(table(genes$State)/nrow(genes), 2)
+
+```
+
+>Q. Complete the code below to produce the following plot
+
+```{r}
+p <- ggplot(genes) + 
+    aes(x=Condition1, y=Condition2, col=State) +
+    geom_point()
+
+p
+
+```
+
+Change the color scale so unchanging genes are not so obvious as I want to highlight the Up and Down genes.
+
+```{r}
+p + theme_bw() +
+  scale_colour_manual(values=c("red", "gray", "blue"))
+```
+
+```{r}
+# File location online
+url <- "https://raw.githubusercontent.com/jennybc/gapminder/master/inst/extdata/gapminder.tsv"
+
+gapminder <- read.delim(url)
+```
+
+```{r}
+# install.packages("dplyr")  ## un-comment to install if needed
+library(gapminder)
+library(dplyr)
+
+gapminder_2007 <- gapminder %>% filter(year==2007)
+```
+
+>Q. Complete the code below to produce a first basic scater plot of this gapminder_2007 dataset:
+
+```{r}
+ggplot(gapminder_2007) +
+  aes(gdpPercap, lifeExp, col=continent) +
+  geom_point()
+```
+
+>Q. Extract data for the US in 1992
+
+```{r}
+filter(gapminder, country =="United States", year =="1992")
+```
+
+What is the population of Ireland
+```{r}
+filter(gapminder, country =="Ireland", year==2007)
+```
+>Q. What countries in data set had pop smaller than Ireland in 2007
+
+```{r}
+gap07 <- filter(gapminder, year ==2007)
+ire_pop <- filter(gap07, country=="Ireland")["pop"]
+
+gap_small <- filter(gap07, pop < 4109086)
+nrow(gap_small)
+
+```
+
+```{r}
+
+```
+
+
+
+```{r}
+ggplot(gap_small) +
+  aes(gdpPercap, lifeExp) +
+  geom_point() +
+  geom_label()
+```
+
+```{r}
+library(ggrepel)
+ggplot(gap_small) +
+  aes(gdpPercap, lifeExp) +
+  geom_point() +
+  geom_label()
+```
+
+
+
+
+
+
+
+
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this 
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
