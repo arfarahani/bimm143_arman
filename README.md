@@ -8,7 +8,7 @@ Classwork for [BIMM F24](https://github.com/arfarahani/bimm143_arman/blob/main/R
 >>>>>>> b24ea32f2524a0cbeaa4824cd84bc95dd8427b92
 
 
-- Class 5 [Data viz with ggplot](https://github.com/arfarahani/bimm143_arman/tree/main/class05)
+- Class 5 [Data viz with ggplot](https://github.com/arfarahani/bimm143_arman/tree/main/class05.md)
 - Class 6 [R functions and R packages](https://github.com/arfarahani/bimm143_arman/tree/main/Class6)
 - Class 7 [Introduction to machine learning for Bioinformatics](https://github.com/arfarahani/bimm143_arman/tree/main/Class7)
 - Class 8 [Unsupervised Learning Mini-Project](https://github.com/arfarahani/bimm143_arman/tree/main/class8)
