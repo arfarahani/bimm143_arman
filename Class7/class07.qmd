@@ -1,0 +1,204 @@
+---
+title: "Class 7: Machine Learning I"
+author: "Arman Farahani A17497672"
+format: pdf
+---
+
+Today we are going to learn how to apply different machine learning methods, begining with clustering:
+
+The goal hee is to find groups/clusters in your input data.
+
+First II will make up some data with clear groups. For tthis I will use the `rnorm()` function.
+
+```{r}
+rnorm(10)
+```
+```{r}
+hist( rnorm(10000) )
+```
+```{r}
+hist( rnorm(10000, mean=3)  )
+```
+```{r}
+n <- 30
+x <- c(rnorm(n, -3), rnorm(n, +3))
+y <- rev(x)
+y
+
+z <- cbind(x, y)
+head(z)
+```
+
+
+```{r}
+plot(z)
+```
+
+
+
+> Q. How many points are in each cluster?
+
+> Q. What 'component' of your result objet details
+  -cluster size
+  -cluster assignment/membership
+  -cluster center
+  
+> Q. Plot x colored by the kmeans cluster assignment and add cluster centers as blue points
+
+
+```{r}
+km <- kmeans(z, centers = 2)
+km
+```
+Results in kmeans object `km`
+```{r}
+attributes(km)
+```
+cluster size?
+```{r}
+km$size
+```
+
+cluster assignment/membership?
+```{r}
+km$cluster
+```
+
+
+
+cluster center
+```{r}
+km$center
+```
+
+> Q. Plot x colored by the kmeans cluster assignment and add cluster centers as blue points
+
+R will re-cycle the shorter color vector to be the same length as the longer (number of data points) in z
+```{r}
+plot(z, col=c("red", "blue"))
+```
+
+```{r}
+plot(z, col=3)
+```
+
+```{r}
+plot(z, col=km$cluster)
+points(km$centers, col="blue", pch=19)
+```
+
+> Q. Can you run kmeans and ask for 4 clusters please and plot the results like we have done above?
+
+```{r}
+km1 <- kmeans(z, center=4)
+plot(z, col=km1$cluster)
+points(km1$centers, col="blue", pch=19)
+```
+Hierarchical clustering
+
+Let's take our same data `z` and see how hclust works.
+```{r}
+d <- dist(z)
+hc <- hclust(d)
+hc
+```
+```{r}
+plot(hc)
+abline(h=8, col="red")
+```
+
+I can get my cluster membership vector by "cutting the tree" with the `cutree()` function like so:
+```{r}
+grps <- cutree(hc, h=8)
+grps
+```
+Can you plot `z` colored by our hclust results:
+
+```{r}
+plot(z, col=grps)
+```
+
+## PCA of UK food data
+
+Read data from the UK on food consumption in different parts of the UK
+
+```{r}
+url <- "https://tinyurl.com/UK-foods"
+  x <- read.csv(url, row.names=1)
+  head(x)
+```
+```{r}
+barplot(as.matrix(x), beside=F, col=rainbow(nrow(x)))
+```
+A so-called "Pairs" plot can be useful for small datasets like this one
+
+```{r}
+pairs(x, col=rainbow(10), pch=16)
+```
+
+It is hard to see structure and trends in even this small dataset. How will we ever do this when we have big datasets with 1,000s or 10s of thousands of things we are measuring...
+
+
+### PCA to the rescue
+
+Let's see how PCA deals with this dataset. So main function in base R to do PCA is called `prcomp()`
+
+```{r}
+pca <- prcomp( t(x) )
+summary(pca)
+```
+
+Let's see what is inside this `pca` object that we created from running `prcomp()`
+```{r}
+attributes(pca)
+```
+
+```{r}
+pca$x
+```
+
+```{r}
+plot(pca$x[,1], pca$x[,2], col=c("black", "red", "blue", "green"), pch=16, xlab="PC1 (67.4%)", ylab= "PC2(29%)")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this 
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).

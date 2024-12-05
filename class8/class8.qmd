@@ -1,0 +1,252 @@
+---
+name: "Arman Farahani A17497672"
+title: "class8"
+format: pdf
+---
+
+It is important to consider scaling your data before analysis such as PCA
+
+For example:
+```{r}
+head(mtcars)
+```
+
+```{r}
+colMeans(mtcars)
+```
+
+```{r}
+apply(mtcars, 2, sd)
+```
+
+```{r}
+x <- scale(mtcars)
+head(x)
+```
+```{r}
+colMeans(x)
+```
+
+```{r}
+round(colMeans(x), 2)
+```
+
+Key-point: It is usually always a good idea to scale your data prior to PCA...
+
+## Breast Cancer Biopsy Analysis 
+
+```{r}
+
+```
+
+
+
+
+```{r}
+# Save your input data file into your Project directory
+fna.data <- "https://bioboot.github.io/bimm143_S20/class-material/WisconsinCancer.csv"
+```
+
+
+```{r}
+# Complete the following code to input the data and store as wisc.df
+wisc.df <- read.csv(fna.data, row.names=1)
+```
+
+```{r}
+head(wisc.df)
+```
+```{r}
+#We can use -1 here to remove the first column
+wisc.data <- wisc.df[,-1]
+```
+
+```{r}
+diagnosis <- wisc.df[,1]
+```
+
+```{r}
+head(wisc.data)
+```
+
+```{r}
+head(diagnosis)
+```
+
+```{r}
+table(diagnosis)
+```
+
+Remove this first `diagnosis` column from the dataset as I don't want to pass this to PCA etc. It is essentially the expert "answer" that we will compare our analysis results to.
+
+
+## Exploratory data analysis
+
+>Q1. How many observations are in this dataset
+
+```{r}
+dim(wisc.data)
+```
+569 observations
+
+>Q2. How many of the observations have a malignant diagnosis?
+
+
+```{r}
+table(diagnosis)
+```
+212 diagnoses
+
+>Q3. How many variables/features in the data are suffixed with _mean?
+
+```{r}
+length(grep("_mean", colnames(wisc.data)))
+```
+10 _means
+
+## Principal Component Analysis
+
+```{r}
+wisc.pr <- prcomp(wisc.data, scale=T)
+summary(wisc.pr)
+```
+Main "PC score plot", "PC1 vs PC2 plot"
+```{r}
+head(wisc.pr$x)
+#plot(wisc.pr$x)
+```
+
+```{r}
+attributes(wisc.pr)
+```
+
+```{r}
+plot(wisc.pr$x[,1], wisc.pr$x[,2], 
+     col=as.factor(diagnosis))
+```
+
+>Q4. From your results, what proportion of the original variance is captured by the first principal components (PC1)?
+
+
+
+```{r}
+summary(wisc.pr)
+```
+.4427
+
+>Q5. How many principal components (PCs) are required to describe at least 70% of the original variance in the data?
+
+3
+
+
+>Q6. How many principal components (PCs) are required to describe at least 90% of the original variance in the data?
+
+7
+
+
+>Q7. What stands out to you about this plot? Is it easy or difficult to understand? Why?
+
+```{r}
+biplot(wisc.pr)
+```
+It is difficult to understand, this is because it includes all variables within the excel that are recorded, some of which do not have correlation, and due to the shear amount, cause a saturation in the plot and makes it hard to read.
+
+
+```{r}
+# Scatter plot observations by components 1 and 2
+plot(wisc.pr$x[,1], wisc.pr$x[,2], col = as.factor(diagnosis) , 
+     xlab = "PC1", ylab = "PC2")
+```
+
+>Q8. Generate a similar plot for principal components 1 and 3. What do you notice about these plots?
+
+```{r}
+# Repeat for components 1 and 3
+plot(wisc.pr$x[,1 ], wisc.pr$x[,3], col = as.factor(diagnosis), 
+     xlab = "PC1", ylab = "PC3")
+```
+
+```{r}
+pr.var <- wisc.pr$sdev^2
+head(pr.var)
+```
+```{r}
+# Variance explained by each principal component: pve
+pve <- pr.var / sum(pr.var)
+
+# Plot variance explained for each principal component
+plot(pve, xlab = "Principal Component", 
+     ylab = "Proportion of Variance Explained", 
+     ylim = c(0, 1), type = "o")
+```
+
+
+
+>Q9. For the first principal component, what is the component of the loading vector (i.e. wisc.pr$rotation[,1]) for the feature concave.points_mean?
+
+```{r}
+wisc.pr$rotation[,1]
+```
+-0.26085376
+
+>Q10. What is the minimum number of principal components required to explain 80% of the variance of the data?
+
+```{r}
+summary(wisc.pr)
+```
+5 PCs
+
+
+```{r}
+data.scaled <- scale(wisc.data)
+```
+
+```{r}
+data.dist <- dist(data.scaled)
+```
+```{r}
+wisc.hclust <- hclust(data.dist, method = "complete")
+```
+
+```{r}
+plot(wisc.hclust)
+```
+
+
+>Q11. Using the plot() and abline() functions, what is the height at which the clustering model has 4 clusters?
+
+```{r}
+plot(wisc.hclust)
+abline(h=19, col="red", lty=2)
+```
+Height is 19
+
+>Q12. Can you find a better cluster vs diagnoses match by cutting into a different number of clusters between 2 and 10?
+
+```{r}
+wisc.hclust.clusters <- cutree(wisc.hclust, k = 10)
+table(wisc.hclust.clusters, diagnosis)
+```
+2 is the best cluster vs diagnosis match for malignant cells, as it has the highest count of malignant cells per cluster
+
+>Q13. Which method gives your favorite results for the same data.dist dataset? Explain your reasoning.
+
+```{r}
+wisc.hclust1 <- hclust(data.dist, method = "complete")
+plot(wisc.hclust1)
+```
+```{r}
+wisc.hclust2 <- hclust(data.dist, method = "single")
+plot(wisc.hclust2)
+```
+
+```{r}
+wisc.hclust3 <- hclust(data.dist, method = "average")
+plot(wisc.hclust3)
+```
+```{r}
+wisc.hclust4 <- hclust(data.dist, method = "ward.D2")
+plot(wisc.hclust4)
+```
+
+I like ward.D2 since the organization pattern is the easiest to read and the most central
