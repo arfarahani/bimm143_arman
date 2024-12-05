@@ -9,5 +9,7 @@ Classwork for [BIMM F24](https://github.com/arfarahani/bimm143_arman/blob/main/R
 
 
 - Class 5 [Data viz with ggplot](https://github.com/arfarahani/bimm143_arman/tree/main/class05)
-- Class 6 []
-- Class 7 []
+- Class 6 [R functions and R packages](https://github.com/arfarahani/bimm143_arman/tree/main/Class6)
+- Class 7 []()
+- Class 8 []()
+- Class 9 []()
