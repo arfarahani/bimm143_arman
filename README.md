@@ -8,6 +8,6 @@ Classwork for [BIMM F24](https://github.com/arfarahani/bimm143_arman/blob/main/R
 >>>>>>> b24ea32f2524a0cbeaa4824cd84bc95dd8427b92
 
 
-- Class 5 [Data viz with ggplot]()
+- Class 5 [Data viz with ggplot](https://github.com/arfarahani/bimm143_arman/tree/main/class05)
 - Class 6 []
 - Class 7 []
