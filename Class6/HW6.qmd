@@ -1,0 +1,59 @@
+---
+title: "HW6 Arman Farahani A17497672"
+format: pdf
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+
+```{r}
+#The data library is loaded
+library(bio3d)
+
+#This variable is assigned a reading and matching function
+generalize <- function(pdb_data) {
+  
+  #The variable is made to read the PDB data files
+  pdbread <- read.pdb(pdb_data) 
+  
+  #This variable trims the data to be within chain A and CA 
+  chaintrim <- trim.pdb(pdbread, chain="A", elety="CA") 
+  
+  #The B-factor is taken from chain A 
+  factorb <- chaintrim$atom$b 
+  
+  #The B-factors are plotted
+  plotb3(factorb, typ="l", ylab="B-factor", main=paste("B-factor for", pdb_data)) 
+}
+
+#The IDs of the pdb data are compiled into this variable
+sets <- c("4AKE", "1AKE", "1E4Y")
+
+#Create a plot for each data point
+for(pdb_data in sets) {
+  generalize(pdb_data)
+}
+```
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this 
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
+
+
+
+
