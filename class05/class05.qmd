@@ -1,7 +1,7 @@
 ---
 title: "Class 6: Data Vis with ggplot"
 author: "Arman Farahani A17497672"
-format: pdf
+format: gfm
 ---
 
 ## Plotting in R
